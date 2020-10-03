@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -377,6 +378,30 @@ public class BibEntry {
             // the change was rejected:
             fields.put(fieldName, oldValue);
             throw new IllegalArgumentException("Change rejected: " + pve);
+        }
+
+        if (fieldName.equals("bibtexkey")) {
+            if (!Character.isLetter(value.toString().charAt(0)) || (value.length() < 2)) {
+                String char1 = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+                String char2 = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+                StringBuilder randomKey = new StringBuilder();
+
+                Random rand = new Random();
+
+                while (randomKey.length() < 6) {
+                    int i = (int) (rand.nextFloat() * randomKey.length());
+                    if (randomKey.length() == 0) {
+                        randomKey.append(char1.charAt(i));
+                    } else {
+                        randomKey.append(char2.charAt(i));
+                    }
+                }
+
+                String newKey = randomKey.toString();
+                fields.put("bibtexkey", newKey);
+            } else {
+                fields.put(fieldName, value);
+            }
         }
     }
 
