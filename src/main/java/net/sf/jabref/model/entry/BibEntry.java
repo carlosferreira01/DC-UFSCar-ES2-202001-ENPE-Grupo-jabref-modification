@@ -378,6 +378,13 @@ public class BibEntry {
             fields.put(fieldName, oldValue);
             throw new IllegalArgumentException("Change rejected: " + pve);
         }
+
+        if (fieldName.equals("year")) {
+            int newYear = Integer.parseInt(value);
+            if (newYear > Calendar.getInstance().get(Calendar.YEAR)) {
+                throw new IllegalArgumentException("This year is invalid: " + newYear);
+            }
+        }
     }
 
     /**
@@ -651,4 +658,5 @@ public class BibEntry {
     public int hashCode() {
         return Objects.hash(type, fields);
     }
+
 }
